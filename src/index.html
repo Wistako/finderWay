@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <title>FinderWay</title>
+</head>
+<body>
+<nav class="container">
+  <a href="#about">About</a>
+  <a href="#finder">Finder</a>
+</nav>
+<div class="container logo">
+  <h1 class="title">PathFinder</h1>
+  <h4 class="subtitle">For travellers</h4>
+</div>
+  <div id="pages">
+    <div id="about" class="about">
+      <div class="container">
+        <div class="box box-one">
+          <div class="description">
+            <h2>plan your Journeys</h2>
+            <p>Pick attractions and book hotels</p>
+          </div>
+        </div>
+        <div class="box box-two">
+          <div class="description">
+            <h2>Minimalize boredom</h2>
+            <p>Pick routes that are short and attractive</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div id="finder" class="finder container">
+      <h2>draw routes</h2>
+      <div class="game-space"></div>
+      <button type="button" class="btn">finish drawning</button>
+    </div>
+  </div>
+  <footer class="container">
+    <h5>All rights reserved</h5>
+  </footer>
+  <script id="template-finder-box" type="text/x-handlebars-template">
+    <div class="finder-box" data-Y="{{y}}" data-X="{{x}}">{{X}}{{Y}}</div>
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script>
+  <script src="js/app.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+.container{
+  padding: 0 80px;
+  text-align: center;
+}
+
+nav a{
+  text-decoration: none;
+  color: $color-white;
+  text-transform: uppercase;
+  margin: 55px;
+  line-height: 99px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}

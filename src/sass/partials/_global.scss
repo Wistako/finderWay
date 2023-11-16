@@ -1,0 +1,60 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  background: $color-dark;
+  color: $color-white;
+  font-family: $font-text;
+  font-weight: $font-regular;
+  background-image: linear-gradient(to bottom, rgba(0,0,0, 0), rgba(0,0,0, 100)), url(../../images/background.jpg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  text-align: center;
+  letter-spacing: 7px;
+}
+
+body > h4 {
+  text-align: right;
+}
+
+.logo{
+  max-width: min-content;
+  margin: 180px auto 100px;
+
+  .title {
+    padding: 0;
+    margin: 0;
+    font-size: 72px;
+    font-weight: $font-bold;
+    letter-spacing: 72px;
+  }
+
+  .subtitle{
+    letter-spacing: 8px;
+    font-size: 2em;
+    margin-top: 0;
+    text-align: right;
+    padding-right: 72px;
+  }
+}
+
+.btn{
+  letter-spacing: inherit;
+  margin-top: 35px;
+  font-size: 1.25em;
+  padding: 10px 14px;
+  text-transform: uppercase;
+  color: $color-white;
+  background-color: $color-selected;
+  font-family: $font-text;
+  font-weight: $font-regular;
+}
+
+footer{
+  margin-top: 56px;
+  margin-bottom: 56px;
+  letter-spacing: inherit;
+}
