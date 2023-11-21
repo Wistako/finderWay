@@ -12,7 +12,7 @@ class FinderBox {
     thisBox.start = false;
     thisBox.end = false;
     thisBox.render();
-    thisBox.initAction();
+    // thisBox.initAction();
   }
   render(){
     
@@ -21,22 +21,18 @@ class FinderBox {
     thisBox.element = utils.createDOMFromHTML(generatedHTML);
     thisBox.dom.wrapper.appendChild(thisBox.element);
   }
-  initAction(){
+  addCorrectWay(){
     const thisBox = this;
-    thisBox.element.addEventListener('click', (e) => {
-      e.preventDefault();
-      thisBox.selectWay();
-    });
+    thisBox.element.classList.add(classNames.finder.correct);
   }
-  selectWay(){ 
+  startWay(){ 
     // select way 
     const thisBox = this;
-
-    thisBox.element.classList.toggle(classNames.finder.selected);
+    thisBox.element.classList.add(classNames.finder.start);
   }
-  // selectStart(){
-  //   const thisBox = this;
-
-  // }
+  endWay(){
+    const thisBox = this;
+    thisBox.element.classList.add(classNames.finder.end);
+  }
 }
 export default FinderBox;

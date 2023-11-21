@@ -1,22 +1,33 @@
-import FinderBox from './components/FinderBox.js';
-import { select, classNames } from './settings.js';
 
+import FinderBox from './components/FinderBox.js';
+import { select, classNames, text} from './settings.js';
+import { utils } from './utils.js';
 const app = {
   initGameSpace(){
-
+    const thisApp = this;
+    thisApp.finderBoxes = {};
+    for ( let x = 0; x < 10; x++ ){
+      thisApp.finderBoxes[x] = [];
+      for( let y = 0; y < 10; y++ ){
+        thisApp.finderBoxes[x][y] = (new FinderBox(x, y));
+      }
+    }
   },
   getElements(){
     const thisApp = this;
     thisApp.dom = {};
+    thisApp.dom.nav = document.querySelector(select.containerOf.nav);
     thisApp.dom.finder = {};
     thisApp.dom.finder.wrapper = document.querySelector(select.containerOf.finderWrapper);
-    thisApp.dom.nav = document.querySelector(select.containerOf.nav);
+    thisApp.dom.finder.gamespace = thisApp.dom.finder.wrapper.querySelector(select.finder.gamespace);
+    thisApp.dom.finder.button = thisApp.dom.finder.wrapper.querySelector(select.finder.button);
+    thisApp.dom.finder.title = thisApp.dom.finder.wrapper.querySelector(select.finder.title);
+    thisApp.dom.finder.alert = thisApp.dom.finder.wrapper.querySelector(select.containerOf.alert);
   },
   initPages: function(){
     const thisApp = this;
     thisApp.pages = document.querySelector(select.containerOf.pages).children;
     thisApp.navLinks = document.querySelectorAll(select.nav.links);
-    console.log(thisApp.navLinks);
     const idFromHash = window.location.hash.replace('#/', '');
 
     let pageMatchingHash = thisApp.pages[0].id;
@@ -49,19 +60,290 @@ const app = {
       page.classList.toggle(classNames.pages.active, pageId == page.id);
     }
   },
+  initActions(){
+    const thisApp = this;
+    thisApp.dom.finder.gamespace.addEventListener('click', utils.toggleSelect);
+    thisApp.dom.finder.button.addEventListener('click', utils.buttonStepOne);
+    thisApp.dom.finder.wrapper.addEventListener('step-one',() => {
+      if(thisApp.isCorrectWay()){
+        thisApp.stepOne();
+        thisApp.cleanAlert();
+      } else {
+        thisApp.cleanData();
+        thisApp.cleanGameSpace();
+        thisApp.alertStepOne();
+      }
+    });
+    thisApp.dom.finder.wrapper.addEventListener('step-two', () => {
+      if(thisApp.findStart() && thisApp.findEnd()){
+        thisApp.stepTwo();
+        thisApp.cleanAlert();
+      } else {
+        thisApp.alertStepTwo();
+      }
+    });
+    thisApp.dom.finder.wrapper.addEventListener('step-three', () => {
+      thisApp.stepThree();
+      thisApp.cleanData();
+    });
+  },
+  // ================================
+  // ========= STEP ONE =============
 
+  // Pierwsze kliknięcie
+  stepOne(){  
+    const thisApp = this;
+    thisApp.dom.finder.gamespace.removeEventListener('click', utils.toggleSelect);
+    thisApp.dom.finder.gamespace.addEventListener('click', utils.startSelect);
+    thisApp.dom.finder.button.removeEventListener('click', utils.buttonStepOne);
+    thisApp.dom.finder.button.addEventListener('click', utils.buttonStepTwo);
+    utils.stepTwoText();
+  },
 
+  // Szukanie sąsiada 
+  findWay(pos){
+    const thisApp = this;
+    if(pos.visit){
+      return;
+    }
+    pos.step = -1;
+    const x = pos.x;
+    const y = pos.y;
+    const sum = pos.sum;
+    const index = pos.index;
+    pos.visit = true;
+
+    // Dodajemy element sasiadujacy o ile go nie ma w tablicy
+    let flag = true;
+    for(const correct of thisApp.correctWay){
+      if(correct.index == index){
+        flag = false;
+      }
+    }
+    if(flag){
+      thisApp.correctWay.push(pos);
+    }
+    // Usuwamy element z kolejki
+    const spliceIndex = thisApp.data.indexOf(pos);
+    thisApp.data.splice(spliceIndex, 1); 
+
+    // tablica sąsiadów
+    const neighbors = [];
+    // Szukamy pasującego bloku 
+    for(const box of thisApp.data){
+      if(
+        (box.x == x || box.y == y)
+        &&
+        ((box.sum + 1) == sum || (box.sum -1) == sum)
+        && !box.hasOwnProperty('visit')
+      ){  
+        neighbors.push(box);
+      }
+    }
+    for(const box of neighbors){
+      thisApp.findWay(box);
+    }
+  },
+
+  // Sprawdzanie poprawności trasy
+  isCorrectWay(){
+    const thisApp = this;
+    thisApp.prepareData();
+    
+    thisApp.correctWay = [];
+    thisApp.findWay(thisApp.data[0]);
+    if(thisApp.data.length == 0){
+      return true;
+    } else {
+      return false;
+    }
+  },
+
+  // Przygotowanie data
+  prepareData(){
+    const thisApp = this;
+    let selectedBox = thisApp.dom.finder.gamespace.querySelectorAll(select.finder.selected);
+    thisApp.data = [];
+    let i = 0;
+    for(const boxElement of selectedBox){
+      const box = {};
+      box.y = parseInt(boxElement.getAttribute('data-y'));
+      box.x = parseInt(boxElement.getAttribute('data-X'));
+      box.sum = box.y + box.x;
+      box.index = i;
+      box.step = -1;
+      i++;
+      thisApp.data.push(box);
+    }
+  },
+  // Alert dla źle wybranej trasy
+  alertStepOne(){
+    const thisApp = this;
+    thisApp.dom.finder.alert.innerHTML = text.alerts.stepOne;
+  },
+  // ================================
+  // ========= STEP TWO =============
+
+  // Drugie kliknięcie
+  stepTwo(){
+    const thisApp = this;
+
+    thisApp.dom.finder.gamespace.removeEventListener('click', utils.startSelect);
+    thisApp.dom.finder.button.addEventListener('click', utils.buttonStepThree);
+    thisApp.dom.finder.button.removeEventListener('click', utils.buttonStepTwo);
+    thisApp.findCorrectWay();
+    utils.stepThreeText();
+  },
+
+  // Logika
+  findCorrectWay(){
+    const thisApp = this;
+    const end = thisApp.findEnd();
+    const start = thisApp.findStart();
+    thisApp.findStep(start);
+    console.log(thisApp.correctWay);
+    thisApp.endWay = [];
+    thisApp.findEndWay(end);
+    thisApp.colorBoxes();
+    thisApp.removeEndClass();
+    
+  },
+  // Szukanie najkrótszej drogi
+  findEndWay(pos){
+    const thisApp = this;
+    thisApp.endWay.push(pos);
+    // Usuwamy element z kolejki
+    const spliceIndex = thisApp.correctWay.indexOf(pos);
+    thisApp.correctWay.splice(spliceIndex, 1); 
+
+    for(const box of thisApp.correctWay){
+      if(
+        (box.x == pos.x || box.y == pos.y)
+        &&
+        ((box.sum + 1) == pos.sum || (box.sum -1) == pos.sum)
+        &&
+        (box.step < (pos.step))
+      ){{
+        thisApp.findEndWay(box);
+        return;
+      }
+      }
+    }
+  },
+  // Szukanie sąsiadów i dodanie im kroku
+  findStep(pos){
+    const thisApp = this;
+    const nextStep = [];
+  
+    for(const box of thisApp.correctWay){
+      if(
+        (box.x == pos.x || box.y == pos.y)
+        &&
+        ((box.sum + 1) == pos.sum || (box.sum -1) == pos.sum)
+        && 
+        (box.step == -1) ^ box.step > (pos.step -1)
+      ){
+        box.step = (pos.step + 1);
+        nextStep.push(box);
+      }
+    }
+    for(const steps of nextStep){
+      thisApp.findStep(steps);
+    }
+  },
+  // Pokolorowanie drogi
+  colorBoxes(){
+    const thisApp = this;
+
+    for(const pos of thisApp.endWay){
+      thisApp.finderBoxes[pos.x][pos.y].addCorrectWay();
+    }
+  },
+  // Szukanie startu
+  findStart(){
+    const thisApp = this;
+    const startElement = thisApp.dom.finder.gamespace.querySelector(select.finder.start);
+    if(startElement){
+      const getY = parseInt(startElement.getAttribute('data-y'));
+      const getX = parseInt(startElement.getAttribute('data-X'));
+      for(const box of thisApp.correctWay){
+        if(box.x == getX && box.y == getY){
+          box.step = 0;
+          return box;
+        }
+      }
+    }
+  },
+
+  // Szukanie końca
+  findEnd(){
+    
+    const thisApp = this;
+    const endElement = thisApp.dom.finder.gamespace.querySelector(select.finder.end);
+    if(endElement){
+      const getY = parseInt(endElement.getAttribute('data-y'));
+      const getX = parseInt(endElement.getAttribute('data-X'));
+      for(const box of thisApp.correctWay){
+        if(box.x == getX && box.y == getY){
+          return box;
+        }
+      }
+    }
+  },
+  // Usuwanie klass końca i początku
+  removeEndClass(){
+    const end = document.querySelector(select.finder.end);
+    end.classList.remove(classNames.finder.end);
+  },
+  // Alert dla startu
+  alertStepTwo(){
+    const thisApp = this;
+    thisApp.dom.finder.alert.innerHTML = text.alerts.stepTwo;
+  },
+  // ================================
+  // ========= STEP THREE ===========
+
+  // Trzecie kliknięcie
+  stepThree(){
+    const thisApp = this;
+    thisApp.dom.finder.gamespace.addEventListener('click', utils.toggleSelect);
+    thisApp.dom.finder.button.addEventListener('click', utils.buttonStepOne);
+    thisApp.dom.finder.button.removeEventListener('click', utils.buttonStepThree);
+    thisApp.cleanGameSpace();
+    utils.stepOneText();
+  },
+  // Czyszczenie alert
+  cleanAlert(){
+    const thisApp = this;
+    thisApp.dom.finder.alert.innerHTML = '';
+  },
+  // Czyszczenie data
+  cleanData(){
+    const thisApp = this;
+    thisApp.correctWay.splice(0, thisApp.correctWay.length);
+    thisApp.data.splice(0, thisApp.data.length);
+    if(thisApp.endway){
+      thisApp.endWay.splice(0, thisApp.endWay.length);
+    }
+  },
+  // Czyszczenie mapy
+  cleanGameSpace(){
+    const thisApp = this;
+
+    const selectedBox =  thisApp.dom.finder.gamespace.querySelectorAll(select.finder.box);
+    for(const box of selectedBox){
+      box.classList.remove(classNames.finder.correct, classNames.finder.end, classNames.finder.selected, classNames.finder.start);
+    }
+
+  },
   init: function() {
     const thisApp = this;
     thisApp.initPages();
     thisApp.getElements();
-    thisApp.FinderBox = [];
-    for ( let x = 0; x < 10; x++ ){
-      for( let y = 0; y < 10; y++ ){
-        thisApp.FinderBox.push(new FinderBox(x, y));
-      }
-    }
-    console.log(thisApp.FinderBox);
+    thisApp.initGameSpace();
+    thisApp.initActions();
+    utils.stepOneText();
+    console.log(thisApp.finderBoxes);
   },
 };
 

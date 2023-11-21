@@ -5,15 +5,17 @@ export const select = {
   containerOf:{
     finderWrapper: '.finder',
     wrapper: 'nav',
-    pages: '#pages'
+    pages: '#pages',
+    alert: '.alert',
   },
   finder:{
-    stepOne: '.finder #step-1',
-    stepTwo: '.finder #step-2',
-    stepThree: '.finder #step-3',
-    gamespace: '.finder .game-space',
-    selected: '.finder .game-space .select',
-    start: '.finder .game-space .start-way',
+    gamespace: '.game-space',
+    selected: '.game-space .select',
+    start: '.start-way',
+    end: '.end-way',
+    button: 'button',
+    title: '.finder .title',
+    box: '.finder-box',
   },
   nav:{
     links: 'nav a',
@@ -23,12 +25,31 @@ export const select = {
 export const templates = {
   finderBox: Handlebars.compile(document.querySelector(select.templateOf.finderBox).innerHTML),
 };
+export const text = {
+  stepOne: {
+    title: 'draw routes',
+    button: 'finish drawing',
+  },
+  stepTwo: {
+    title: 'pick start and finish',
+    button: 'compute',
+  },
+  stepThree: {
+    title: 'the best route is...',
+    button: 'start again',
+  },
+  alerts:{
+    stepOne: 'the route is incorrect',
+    stepTwo: 'select start and finish',
+  }
 
+};
 export const classNames = {
   pages: {
     active: 'active',
   },
   finder: {
+    box:'finder-box',
     selected: 'select',
     correct: 'correct',
     start: 'start-way',
