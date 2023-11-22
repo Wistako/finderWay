@@ -13,6 +13,7 @@
 }
 
 .finder-box{
+  z-index: 100;
   border: 2px solid $color-white;
   height: 70px;
   width: 70px;
@@ -40,6 +41,11 @@
 
 .select{
   background: $color-selected;
+}
+
+.maybe-select{
+  background: $color-start;
+  opacity: 0.6;
 }
 
 .correct{

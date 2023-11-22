@@ -62,17 +62,19 @@ const app = {
   },
   initActions(){
     const thisApp = this;
-    thisApp.dom.finder.gamespace.addEventListener('click', utils.toggleSelect);
+    thisApp.dom.finder.gamespace.addEventListener('click', thisApp.toggleSelect);
     thisApp.dom.finder.button.addEventListener('click', utils.buttonStepOne);
     thisApp.dom.finder.wrapper.addEventListener('step-one',() => {
       if(thisApp.isCorrectWay()){
         thisApp.stepOne();
         thisApp.cleanAlert();
+        thisApp.cleanMaybeSelect();
       } else {
         thisApp.cleanData();
         thisApp.cleanGameSpace();
         thisApp.alertStepOne();
       }
+
     });
     thisApp.dom.finder.wrapper.addEventListener('step-two', () => {
       if(thisApp.findStart() && thisApp.findEnd()){
@@ -85,6 +87,16 @@ const app = {
     thisApp.dom.finder.wrapper.addEventListener('step-three', () => {
       thisApp.stepThree();
       thisApp.cleanData();
+      thisApp.addStartSelect();
+    });
+    thisApp.dom.finder.gamespace.addEventListener('selected', () => {
+      thisApp.selectedBoxes();
+      if(thisApp.isCorrectWay()){
+        thisApp.cleanAlert();
+      } else {
+        thisApp.alertStepOne();
+        thisApp.alertWrongSelect();
+      }
     });
   },
   // ================================
@@ -93,7 +105,7 @@ const app = {
   // Pierwsze kliknięcie
   stepOne(){  
     const thisApp = this;
-    thisApp.dom.finder.gamespace.removeEventListener('click', utils.toggleSelect);
+    thisApp.dom.finder.gamespace.removeEventListener('click', thisApp.toggleSelect);
     thisApp.dom.finder.gamespace.addEventListener('click', utils.startSelect);
     thisApp.dom.finder.button.removeEventListener('click', utils.buttonStepOne);
     thisApp.dom.finder.button.addEventListener('click', utils.buttonStepTwo);
@@ -151,8 +163,11 @@ const app = {
     thisApp.prepareData();
     
     thisApp.correctWay = [];
+    if(!thisApp.data[0]){
+      return false;
+    }
     thisApp.findWay(thisApp.data[0]);
-    if(thisApp.data.length == 0){
+    if(thisApp.data.length == 0 ){
       return true;
     } else {
       return false;
@@ -306,11 +321,105 @@ const app = {
   // Trzecie kliknięcie
   stepThree(){
     const thisApp = this;
-    thisApp.dom.finder.gamespace.addEventListener('click', utils.toggleSelect);
+    thisApp.dom.finder.gamespace.addEventListener('click', thisApp.toggleSelect);
     thisApp.dom.finder.button.addEventListener('click', utils.buttonStepOne);
     thisApp.dom.finder.button.removeEventListener('click', utils.buttonStepThree);
     thisApp.cleanGameSpace();
     utils.stepOneText();
+  },
+  // ================================
+
+  // Wybieranie drogi
+  toggleSelect(e){
+    console.log(e);
+    const selectedEvent = new CustomEvent('selected', {
+      bubbles: true,
+      detail: {
+        element: e.srcElement,
+      },
+    });
+    if(e.srcElement.classList.contains(classNames.finder.maybeSelect) || e.srcElement.classList.contains(classNames.finder.startSelect)){
+      e.srcElement.classList.toggle(classNames.finder.selected);
+      // thisApp.findNeightbours(e.srcElement);
+    } else {
+      e.srcElement.classList.toggle(classNames.finder.selected, e.srcElement.classList.contains(classNames.finder.maybeSelect));
+      
+    }
+    e.srcElement.dispatchEvent(selectedEvent);
+  },
+  // Znajdowanie wszystkich zaznaczonych elementów
+  selectedBoxes(){
+    const thisApp = this;
+    thisApp.cleanMaybeSelect();
+    let i = 0;
+    for (let x = 0; x < 10; x ++){
+      for( let y = 0; y < 10; y ++){
+        const finderBox = thisApp.finderBoxes[x][y];
+        if(finderBox.element.classList.contains(classNames.finder.selected)){
+          thisApp.findNeightbours(finderBox.element);
+          i++;
+        }
+      }
+    }
+    if(i == 0){
+      thisApp.addStartSelect();
+    }
+    else {
+      thisApp.cleanStartSelect();
+    }
+
+  },
+  // Znajdowanie dla jednego elementu sąsiadów pod wybór i dodanie im klasy
+  findNeightbours(element){
+    const thisApp = this;
+    
+    const getY = parseInt(element.getAttribute('data-y'));
+    const getX = parseInt(element.getAttribute('data-X'));
+    const sum = getY + getX;
+    for (let x = 0; x < 10; x ++){
+      for( let y = 0; y < 10; y ++){
+        const finderBox = thisApp.finderBoxes[x][y];
+        if(
+          (finderBox.position.x == getX || finderBox.position.y == getY)
+        &&
+        ((finderBox.position.sum + 1) == sum || (finderBox.position.sum -1) == sum)){
+          finderBox.element.classList.toggle(classNames.finder.maybeSelect, !finderBox.element.classList.contains(classNames.finder.selected));
+        }
+      }
+    }
+  },
+  // Dodawanie start-select (kiedy nic nie jest zaznaczone)
+  addStartSelect(){
+    const thisApp = this;
+    
+    for (let x = 0; x < 10; x ++){
+      for( let y = 0; y < 10; y ++){
+        const finderBox = thisApp.finderBoxes[x][y];
+        finderBox.addStartSelect();
+      }
+    }
+  },
+  // Czysczenie start-select (kiedy coś jest zaznaczone)
+  cleanStartSelect(){
+    const thisApp = this;
+    
+    for (let x = 0; x < 10; x ++){
+      for( let y = 0; y < 10; y ++){
+        const finderBox = thisApp.finderBoxes[x][y];
+        finderBox.removeStartSelect();
+      
+      }
+    }
+  },
+  // Czyszczenie maybe-select 
+  cleanMaybeSelect(){
+    const thisApp = this;
+    
+    for (let x = 0; x < 10; x ++){
+      for( let y = 0; y < 10; y ++){
+        thisApp.finderBoxes[x][y].element.classList.remove(classNames.finder.maybeSelect);
+      }
+    }
   },
   // Czyszczenie alert
   cleanAlert(){

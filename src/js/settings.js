@@ -54,5 +54,7 @@ export const classNames = {
     correct: 'correct',
     start: 'start-way',
     end: 'end-way',
+    maybeSelect: 'maybe-select',
+    startSelect: 'start-select'
   },
 };

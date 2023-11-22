@@ -9,36 +9,38 @@
 }
 
 .box{
-  letter-spacing: 7px;
-  background-repeat: no-repeat;
+  letter-spacing: 9px;
+  position: relative;
+  margin: 40px;
+
+  img{
+    width: 100%;
+    height: auto;
+  }
 
   .description{
+    position: absolute;
+    z-index: 100;
     text-align: left;
   }
-}
 
-.box-one{
-  width: 1175px;
-  height: 620px;
-  margin: 0;
-  padding: 100px 0 50px;
-  margin-left: 80px;
-  background-image: url(../../images/1.jpg);
-  background-size: 800px 530px;
+  &.left{
+    width: 45%;
 
-  .description{
-    margin-top: 200px;
-    padding-left: 480px;
+    .description{
+      bottom: 15%;
+      right: -55%;
+    }
   }
-}
 
-.box-two{
-  margin-left: 200px;
-  padding: 24px 0;
-  width: 1576px;
-  height: 600px;
-  background-image: url(../../images/2.jpg);
-  background-size: 1268px 676px;
-  background-position: right;
-  
+  &.right{
+    margin-right: 0;
+    margin-left: auto;
+    width: 60%;
+
+    .description{
+      top: 15%;
+      left: -35%;
+    }
+  }
 }

@@ -1,0 +1,176 @@
+@media screen and (min-width: 1300px) and (max-width: 1600px) {
+  h2{
+    font-size: 2em;
+  }
+
+  p{
+    font-size: 1.25em;
+  }
+}
+
+@media  screen and (max-width: 1300px) and (min-width:1100px) {
+  .logo{
+    margin: 90px auto;
+
+    .title{
+      font-size: 48px;
+      letter-spacing: 48px;
+    }
+
+    .subtitle{
+      font-size: 1em;
+    }
+  }
+
+  .box{
+    letter-spacing: 5px;
+  }
+
+  h2{
+    font-size: 1.5em;
+  }
+  
+  p{
+    font-size: 1em;
+  }
+}
+@media screen and (max-width: 1100px) and (min-width: 740px) {
+  .logo{
+    margin: 20px auto 110px;
+    text-align: center;
+
+    .title{
+      font-size: 36px;
+      letter-spacing: 36px;
+    }
+
+    .subtitle{
+      font-size: 1em;
+    }
+  }
+
+  .box{
+    
+    letter-spacing: 4px;
+
+    .description{
+      width: 100%;
+    }
+
+    &.left .description{
+      right: auto;
+      bottom: 48px;
+      text-align: center;
+    }
+
+    &.right .description{
+      left: auto;
+      top: auto;
+      bottom: 48px;
+      text-align: center;
+    }
+
+    &.left{
+      margin: 30px auto;
+      width: 90%;
+    }
+
+    &.right{
+      margin: 30px auto;
+      width: 90%;
+    }
+  }
+
+  h2{
+    font-size: 1.25em;
+  }
+  
+  p{
+    font-size: 1em;
+  }
+
+  .finder-box{
+    height: 40px;
+    width: 40px;
+  }
+
+  .game-space{
+    height: 400px;
+    width: 400px;
+  }
+}
+@media screen and (max-width: 740px) {
+  body{
+    min-height: 800px;
+  }
+
+  nav a{
+    margin: 12px;
+  }
+
+  .logo{
+    margin: 20px auto 80px;
+    text-align: center;
+
+    .title{
+      font-size: 22px;
+      letter-spacing: 22px;
+    }
+
+    .subtitle{
+      font-size: 1em;
+    }
+  }
+
+  .box{
+    .description{
+      width: 100%;
+      margin: 60px auto;
+    }
+
+    &.left .description{
+      right: auto;
+      bottom: -48px;
+      text-align: center;
+    }
+
+    &.right .description{
+      left: auto;
+      top: auto;
+      bottom: -48px;
+      text-align: center;
+    }
+
+    &.left{
+      margin: 30px auto;
+      width: 90%;
+    }
+
+    &.right{
+      margin: 30px auto;
+      width: 90%;
+    }
+  }
+  
+  .box{
+    letter-spacing: 4px;
+  }
+
+  h2{
+    font-size: 1.25em;
+  }
+  
+  p{
+    font-size: 1em;
+  }
+
+  .finder-box{
+    height: 40px;
+    width: 40px;
+  }
+
+  .game-space{
+    height: 400px;
+    width: 400px;
+  }
+}

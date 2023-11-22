@@ -23,7 +23,7 @@ body > h4 {
 
 .logo{
   max-width: min-content;
-  margin: 180px auto 100px;
+  margin: 180px auto 15vh;
 
   .title {
     padding: 0;
@@ -55,6 +55,7 @@ body > h4 {
 }
 
 footer{
+  position: relative;
   margin-top: 56px;
   margin-bottom: 56px;
   letter-spacing: inherit;

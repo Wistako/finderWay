@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <title>FinderWay</title>
 </head>
@@ -19,20 +20,21 @@
   <div id="pages">
     <div id="about" class="about">
       <div class="container">
-        <div class="box box-one">
+        <div class="box left" data-aos="zoom-in-right">
+          <img src="images/1.jpg" alt="girls on desert">
           <div class="description">
             <h2>plan your Journeys</h2>
             <p>Pick attractions and book hotels</p>
           </div>
         </div>
-        <div class="box box-two">
+        <div class="box right" data-aos="zoom-in-left">
+          <img src="images/2.jpg" alt="highway">
           <div class="description">
             <h2>Minimalize boredom</h2>
             <p>Pick routes that are short and attractive</p>
           </div>
         </div>
       </div>
-
     </div>
     <div id="finder" class="finder container">
       <h2 class="title">-</h2>
@@ -41,12 +43,15 @@
       <button type="button" class="btn"></button>
     </div>
   </div>
-  <div ></div>
   <footer class="container">
     <h5>All rights reserved</h5>
   </footer>
   <script id="template-finder-box" type="text/x-handlebars-template">
     <div class="finder-box" data-Y="{{y}}" data-X="{{x}}">{{X}}{{Y}}</div>
+  </script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script>
