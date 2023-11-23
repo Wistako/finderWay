@@ -21,7 +21,6 @@ export const select = {
     links: 'nav a',
   }
 };
-
 export const templates = {
   finderBox: Handlebars.compile(document.querySelector(select.templateOf.finderBox).innerHTML),
 };
@@ -42,7 +41,6 @@ export const text = {
     stepOne: 'the route is incorrect',
     stepTwo: 'select start and finish',
   }
-
 };
 export const classNames = {
   pages: {

@@ -1,23 +1,15 @@
 import { classNames, select, text} from './settings.js';
-
 export const utils = {};
 const gamespace = document.querySelector(select.finder.gamespace);
 const finderTitle = document.querySelector(select.finder.title);
 const finderButton = document.querySelector(select.finder.button);
-
 utils.createDOMFromHTML = function(htmlString) {
   let div = document.createElement('div');
   div.innerHTML = htmlString.trim();
   return div.firstChild;
 };
-
-// Wybieranie drogi
-utils.toggleSelect = function(e){
-  if(e.target.classList.contains(classNames.finder.box)){
-    e.target.classList.toggle(classNames.finder.selected);
-  }
-};
-// Wybieranie startu 
+// FINDER
+// Select start, STEP TWO
 utils.startSelect = function(e){
   if(e.target.classList.contains(classNames.finder.selected)){
     e.target.classList.add(classNames.finder.start);
@@ -25,29 +17,28 @@ utils.startSelect = function(e){
     gamespace.addEventListener('click', utils.endSelect);
   }
 };
-// Wynieranie końca
+// Select end, STEP TWO
 utils.endSelect = function(e){
   if(e.target.classList.contains(classNames.finder.selected)){
     e.target.classList.add(classNames.finder.end);
     gamespace.removeEventListener('click', utils.endSelect);
   }
 };
-// Przycisk 1
+// Button first step
 utils.buttonStepOne = function(){
   this.dispatchEvent(eventOne);
   eventOne;
 };
-// Przycisk 2
+// Button second step
 utils.buttonStepTwo = function(){
   this.dispatchEvent(eventTwo);
   eventTwo;
 };
-// Przycisk 3
+// Button third step
 utils.buttonStepThree = function(){
   this.dispatchEvent(eventThree);
   eventThree;
 };
-
 // Custom Event Step one
 const eventOne = new CustomEvent('step-one', {
   bubbles: true,
@@ -60,9 +51,7 @@ const eventTwo = new CustomEvent('step-two', {
 const eventThree = new CustomEvent('step-three', {
   bubbles: true,
 });
-
-
-// Zmiana tekstu button i title
+// Change text to STEP ONE, TWO, THREE
 utils.stepOneText = function(){
   finderTitle.innerHTML = text.stepOne.title;
   finderButton.innerHTML = text.stepOne.button;
@@ -70,10 +59,8 @@ utils.stepOneText = function(){
 utils.stepTwoText = function(){
   finderTitle.innerHTML = text.stepTwo.title;
   finderButton.innerHTML = text.stepTwo.button;
-
 };
 utils.stepThreeText = function(){
   finderTitle.innerHTML = text.stepThree.title;
   finderButton.innerHTML = text.stepThree.button;
-
 };
