@@ -7,6 +7,7 @@ export const select = {
     wrapper: 'nav',
     pages: '#pages',
     alert: '.alert',
+    messageBox: '.messageBox',
   },
   finder:{
     gamespace: '.game-space',
@@ -17,18 +18,18 @@ export const select = {
     title: '.finder .title',
     box: '.finder-box',
   },
+  messageBox:{
+    sumBox: '#sum-box #number',
+    shortWay: '#short-way #number',
+    longWay: '#long-way #number_correct',
+    close: '.messageBox #close',
+  },
   nav:{
     links: 'nav a',
   }
 };
 export const templates = {
   finderBox: Handlebars.compile(document.querySelector(select.templateOf.finderBox).innerHTML),
-};
-export const settings = {
-  db: {
-    url: '//' + window.location.hostname + (window.location.hostname=='localhost' ? ':3131' : ''),
-    scoreBoard: 'scores'
-  },
 };
 export const text = {
   stepOne: {
@@ -59,6 +60,10 @@ export const classNames = {
     start: 'start-way',
     end: 'end-way',
     maybeSelect: 'maybe-select',
-    startSelect: 'start-select'
+    startSelect: 'start-select',
+    gamespace: 'game-space',
   },
+  messageBox:{
+    active: 'active',
+  }
 };

@@ -6,7 +6,18 @@ h2{
   font-size: 3.5em;
   margin-bottom: 0;
 }
+h3{
+  color: #000;
+  text-align: left;
+  letter-spacing: 4px;
+}
 
+#number{
+  color: $color-selected;
+  &_correct{
+    color: $color-start;
+  }
+}
 p{
   margin-top: 0;
   font-size: 2em;

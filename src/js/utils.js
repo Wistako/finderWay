@@ -19,7 +19,7 @@ utils.startSelect = function(e){
 };
 // Select end, STEP TWO
 utils.endSelect = function(e){
-  if(e.target.classList.contains(classNames.finder.selected)){
+  if(e.target.classList.contains(classNames.finder.selected) && !e.target.classList.contains(classNames.finder.start)){
     e.target.classList.add(classNames.finder.end);
     gamespace.removeEventListener('click', utils.endSelect);
   }

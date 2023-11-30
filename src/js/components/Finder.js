@@ -1,6 +1,7 @@
 import { select, classNames, text } from '../settings.js';
 import FinderBox from './FinderBox.js';
 import { utils } from '../utils.js';
+import MessageBox from './MessageBox.js';
 class Finder {
   constructor(element){
     const thisFinder = this;
@@ -8,6 +9,7 @@ class Finder {
     thisFinder.initGameSpace();
     thisFinder.initActions();
     utils.stepOneText();
+    thisFinder.messageBox = new MessageBox();
   }
   // Find DOMelements
   getElements(element){
@@ -33,10 +35,10 @@ class Finder {
   // Add listeners
   initActions(){
     const thisFinder = this;
-    thisFinder.dom.gamespace.addEventListener('click', thisFinder.toggleSelect);
+    thisFinder.dom.gamespace.addEventListener('click', thisFinder.triggerSelect);
     thisFinder.dom.button.addEventListener('click', utils.buttonStepOne);
     thisFinder.dom.wrapper.addEventListener('step-one',() => {
-      if(thisFinder.isCorrectWay()){
+      if(thisFinder.isCorrectWay() && thisFinder.prepareData().length > 2){
         thisFinder.stepOne();
         thisFinder.cleanAlert();
         thisFinder.cleanMaybeSelect();
@@ -58,20 +60,31 @@ class Finder {
       thisFinder.cleanData();
       thisFinder.addStartSelect();
     });
-    thisFinder.dom.gamespace.addEventListener('selected', () => {
-      thisFinder.selectedBoxes();
+    thisFinder.dom.gamespace.addEventListener('selected', (e) => {
+      const clickedElem = e.detail.element;
+      // Checking whether an item can be selected or has been selected
+      if(clickedElem.classList.contains(classNames.finder.maybeSelect) || clickedElem.classList.contains(classNames.finder.startSelect)){
+        clickedElem.classList.toggle(classNames.finder.selected);
+      } else if(clickedElem.classList.contains(classNames.finder.box)){
+        clickedElem.classList.toggle(classNames.finder.selected, clickedElem.classList.contains(classNames.finder.maybeSelect));
+        if(!thisFinder.isCorrectWay() ^ thisFinder.prepareData().length == 0){
+          clickedElem.classList.toggle(classNames.finder.selected);
+        }
+      }
       if(thisFinder.isCorrectWay()){
         thisFinder.cleanAlert();
       } else {
+        thisFinder.addStartSelect();
         thisFinder.alertStepOne();
       }
+      thisFinder.selectedBoxes();
     });
   }
   // =============== STEP ONE ==============
   // First click on button
   stepOne(){  
     const thisFinder = this;
-    thisFinder.dom.gamespace.removeEventListener('click', thisFinder.toggleSelect);
+    thisFinder.dom.gamespace.removeEventListener('click', thisFinder.triggerSelect);
     thisFinder.dom.gamespace.addEventListener('click', utils.startSelect);
     thisFinder.dom.button.removeEventListener('click', utils.buttonStepOne);
     thisFinder.dom.button.addEventListener('click', utils.buttonStepTwo);
@@ -158,7 +171,7 @@ class Finder {
     thisFinder.dom.alert.innerHTML = text.alerts.stepOne;
   }
   // Select box
-  toggleSelect(e){
+  triggerSelect(e){
     // Triggering an event to check the correctness of the route
     const selectedEvent = new CustomEvent('selected', {
       bubbles: true,
@@ -166,12 +179,6 @@ class Finder {
         element: e.srcElement,
       },
     });
-    // Checking whether an item can be selected or has been selected
-    if(e.srcElement.classList.contains(classNames.finder.maybeSelect) || e.srcElement.classList.contains(classNames.finder.startSelect)){
-      e.srcElement.classList.toggle(classNames.finder.selected);
-    } else {
-      e.srcElement.classList.toggle(classNames.finder.selected, e.srcElement.classList.contains(classNames.finder.maybeSelect));
-    }
     e.srcElement.dispatchEvent(selectedEvent);
   }
   // Finding all selected elements, adding maybe-select class to neighbors
@@ -204,12 +211,17 @@ class Finder {
     const sum = getY + getX;
     for (let x = getX - 1; x <= getX + 1; x ++){
       for( let y = getY - 1; y <= getY + 1; y ++){
-        const finderBox = thisFinder.finderBoxes[x][y];
-        if(
-          (finderBox.position.x == getX || finderBox.position.y == getY)
-        &&
-        ((finderBox.position.sum + 1) == sum || (finderBox.position.sum -1) == sum)){
-          finderBox.element.classList.toggle(classNames.finder.maybeSelect, !finderBox.element.classList.contains(classNames.finder.selected));
+        if(thisFinder.finderBoxes[x]){
+          if(thisFinder.finderBoxes[x][y]){
+            const finderBox = thisFinder.finderBoxes[x][y];
+            if(
+              (finderBox.position.x == getX || finderBox.position.y == getY)
+            &&
+            ((finderBox.position.sum + 1) == sum || (finderBox.position.sum -1) == sum)){
+              finderBox.element.classList.toggle(classNames.finder.maybeSelect, !finderBox.element.classList.contains(classNames.finder.selected));
+            }
+
+          }
         }
       }
     }
@@ -250,6 +262,8 @@ class Finder {
     thisFinder.dom.gamespace.removeEventListener('click', utils.startSelect);
     thisFinder.dom.button.addEventListener('click', utils.buttonStepThree);
     thisFinder.dom.button.removeEventListener('click', utils.buttonStepTwo);
+    thisFinder.messageBox.setData(thisFinder.correctWay, thisFinder.findStart(), thisFinder.findEnd());
+    thisFinder.messageBox.display();
     thisFinder.findCorrectWay();
     utils.stepThreeText();
   }
@@ -271,9 +285,6 @@ class Finder {
   findEndWay(pos){
     const thisFinder = this;
     thisFinder.endWay.push(pos);
-    // Delate item form the queue
-    const spliceIndex = thisFinder.correctWay.indexOf(pos);
-    thisFinder.correctWay.splice(spliceIndex, 1);
     // Find an adjacent element with a smaller step, call recursion on it and stop
     for(const box of thisFinder.correctWay){
       if(
@@ -363,10 +374,13 @@ class Finder {
   // Third click on button
   stepThree(){
     const thisFinder = this;
-    thisFinder.dom.gamespace.addEventListener('click', thisFinder.toggleSelect);
+    thisFinder.dom.gamespace.addEventListener('click', thisFinder.triggerSelect);
     thisFinder.dom.button.addEventListener('click', utils.buttonStepOne);
     thisFinder.dom.button.removeEventListener('click', utils.buttonStepThree);
     thisFinder.cleanGameSpace();
+    console.log(thisFinder.correctWay);
+    console.log(thisFinder.data);
+    console.log(thisFinder.endWay);
     utils.stepOneText();
   }
   cleanAlert(){

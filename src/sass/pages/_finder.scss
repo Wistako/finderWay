@@ -8,8 +8,12 @@
   }
 }
 
-.finder h2{
+.finder .title{
   margin: 0 0 12px;
+  &_messageBox{
+    color: #000000;
+    margin: 0;
+  }
 }
 
 .finder-box{
@@ -37,6 +41,31 @@
   text-align: center;
   margin: 0 auto;
   padding: 22px 0 0;
+}
+.messageBox{
+  display: none;
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0, 0.6);
+  z-index: 100;
+  &_content{
+    background-color: $color-white;
+    margin: 0 auto;
+    position: relative;
+    top: 35%;
+    padding: 60px;
+    max-width: 680px;
+    span.field{
+      color: gray;
+    }
+  }
+  &.active{
+    display: block;
+  }
+  
 }
 
 .select{
