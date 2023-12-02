@@ -1,2 +1,2 @@
 
-https://finderway.wistako.repl.co/#/finder
+https://finderway.wistako.repl.co/
