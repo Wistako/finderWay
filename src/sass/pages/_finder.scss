@@ -10,7 +10,7 @@
 
 .finder .title{
   margin: 0 0 12px;
-  &_messageBox{
+  &_FinderSummary{
     color: #000000;
     margin: 0;
   }
@@ -42,7 +42,7 @@
   margin: 0 auto;
   padding: 22px 0 0;
 }
-.messageBox{
+.FinderSummary{
   display: none;
   position: fixed;
   top: 0; 

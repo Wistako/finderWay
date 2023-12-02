@@ -1,7 +1,7 @@
 import { select, classNames, text } from '../settings.js';
 import FinderBox from './FinderBox.js';
 import { utils } from '../utils.js';
-import MessageBox from './MessageBox.js';
+import FinderSummary from './FinderSummary.js';
 class Finder {
   constructor(element){
     const thisFinder = this;
@@ -9,7 +9,7 @@ class Finder {
     thisFinder.initGameSpace();
     thisFinder.initActions();
     utils.stepOneText();
-    thisFinder.messageBox = new MessageBox();
+    thisFinder.FinderSummary = new FinderSummary();
   }
   // Find DOMelements
   getElements(element){
@@ -262,9 +262,10 @@ class Finder {
     thisFinder.dom.gamespace.removeEventListener('click', utils.startSelect);
     thisFinder.dom.button.addEventListener('click', utils.buttonStepThree);
     thisFinder.dom.button.removeEventListener('click', utils.buttonStepTwo);
-    thisFinder.messageBox.setData(thisFinder.correctWay, thisFinder.findStart(), thisFinder.findEnd());
-    thisFinder.messageBox.display();
     thisFinder.findCorrectWay();
+    thisFinder.FinderSummary.setData(thisFinder.correctWay, thisFinder.findEnd());
+    thisFinder.FinderSummary.display();
+    thisFinder.removeEndClass();
     utils.stepThreeText();
   }
   // Logic
@@ -279,7 +280,6 @@ class Finder {
     thisFinder.findEndWay(end);
     // Coloring the correct path
     thisFinder.colorBoxes();
-    thisFinder.removeEndClass();
   }
   // Searching for the shortest route starting from the start
   findEndWay(pos){

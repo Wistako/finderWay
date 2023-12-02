@@ -7,7 +7,7 @@ export const select = {
     wrapper: 'nav',
     pages: '#pages',
     alert: '.alert',
-    messageBox: '.messageBox',
+    FinderSummary: '.FinderSummary',
   },
   finder:{
     gamespace: '.game-space',
@@ -18,11 +18,11 @@ export const select = {
     title: '.finder .title',
     box: '.finder-box',
   },
-  messageBox:{
+  FinderSummary:{
     sumBox: '#sum-box #number',
-    shortWay: '#short-way #number',
-    longWay: '#long-way #number_correct',
-    close: '.messageBox #close',
+    shortWay: '#short-way #number_correct',
+    longWay: '#long-way #number',
+    close: '.FinderSummary #close',
   },
   nav:{
     links: 'nav a',
@@ -63,7 +63,7 @@ export const classNames = {
     startSelect: 'start-select',
     gamespace: 'game-space',
   },
-  messageBox:{
+  FinderSummary:{
     active: 'active',
   }
 };
